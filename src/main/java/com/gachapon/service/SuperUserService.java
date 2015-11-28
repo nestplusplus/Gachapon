@@ -8,7 +8,7 @@ import com.gachapon.repository.SuperUserRepository;
 import com.gachapon.web.SuperUserLoginForm;
 
 @Service
-public class SuperUserLoginService {
+public class SuperUserService {
 	@Autowired
 	private SuperUserRepository repository;
 
