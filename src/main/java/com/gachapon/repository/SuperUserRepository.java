@@ -57,9 +57,9 @@ public class SuperUserRepository {
 					.addValue("mailaddress", mailaddress)
 					.addValue("password",password);
 			account = jdbcTemplate.queryForObject(
-					"SELECT id, user_name, mailaddress, password, location, registered_date, modified_date, super_flag, resign_flag"
-					+ " FROM ACCOUNT "
-					+ "WHERE mailaddress = :mailaddress AND password = :password", 
+					"SELECT id, user_name, mailaddress, password, location, registered_date, modified_date, super_flag, resign_flag "
+					+ "FROM ACCOUNT "
+					+ "WHERE mailaddress = :mailaddress AND password = :password AND super_flag = TRUE", 
 					param, 
 					ACCOUNT_ROW_MAPPER);
 		} catch (Exception e) {}

@@ -1,7 +1,10 @@
 package com.gachapon.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,15 +12,32 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gachapon.domain.Account;
+import com.gachapon.page.SuperUserPage;
 import com.gachapon.service.SuperUserService;
 
 @Controller 							// コントローラーであることを示す
 @RequestMapping(value="/superUser")  	// アドレスの指定。ここで指定するのはクラス自体のアドレス。他のメソッド参考にしてください。
+@SessionAttributes("superUserPage")		// セッション変数の指定
 public class SuperUserContoroller {
+	// 遷移先格納用
+	private String url;
+	
+	// 遷移先指定用 単純遷移の時はこっち
+	private final static String index 		= "SuperUser/index";
+	private final static String companyList = "SuperUser/top";
+	
+	// リダイレクト用 他の処理を通す時はこっち
+	private final static String top		= "redirect:/superUser/top";
+	private final static String logout 		= "redirect:/superUser";
+	
+	// エラーメッセージ用
+	private final static String errorMsg 	= "errorMsg";
+	
 	@Autowired 							// DI。どのクラスと関連付けるか。コントローラーなのでサービスクラスを指定
 	SuperUserService service;
 	
@@ -33,7 +53,7 @@ public class SuperUserContoroller {
 	 */
 	@RequestMapping // valueの指定がないので、クラス自体のアドレスだけの際にはこのメソッドが呼び出される[http://localhost:8080/superUser]
 	public String displaySuperUserIndex(){ // 戻り値はhtmlのファイル名を返すのでString
-		return "SuperUser/index"; // 呼び出すhtml(jsp)を指定。この場合[SuperUserフォルダのindex.jsp]を呼び出している。
+		return index; // 呼び出すhtml(jsp)を指定。この場合[SuperUserフォルダのindex.jsp]を呼び出している。
 	}
 	
 	/**
@@ -55,14 +75,46 @@ public class SuperUserContoroller {
 			HttpSession session, 
 			SessionStatus sessionStatus,
 			RedirectAttributes redirectAttributes){
-		Account account = service.findSuperUser(form); // サービスクラスからアカウント情報を取得
-		if(account == null){ // 取得できなかったときの処理
-			ObjectError error = new ObjectError("errorMsg","メールアドレスかパスワードが違います。");
+		// サービスクラスからアカウント情報を取得
+		Optional<Account> account = service.findSuperUser(form);
+		// 取得できなかったときの処理
+		if(!account.isPresent()){
+			ObjectError error = new ObjectError(errorMsg,"ユーザー認証に失敗しました"); // エラー情報の格納
 			result.addError(error);
-			return displaySuperUserIndex();
+			url = displaySuperUserIndex(); // 遷移先指定
 		}
-		model.addAttribute("account", account); // 取得できたアカウント情報を次の画面に渡すための処理
-		return "SuperUser/menu";
+		// 正常時の処理
+		account.ifPresent(superUser ->{
+			SuperUserPage superUserPage = new SuperUserPage();
+			BeanUtils.copyProperties(superUser, superUserPage); // 取得した値を表示用クラスにコピー
+			model.addAttribute("superUserPage", superUserPage); // 取得できたアカウント情報を次の画面に渡すための処理
+			url = top;
+		});
+		return url;
 	}
 	// ログアウト
+	/**
+	 * ログアウト
+	 * @param sessionStatus
+	 * @return
+	 */
+	@RequestMapping(value="logout")
+	public String logout(SessionStatus sessionStatus) {
+		sessionStatus.setComplete();
+		return logout;
+	}
+	
+	// 企業一覧
+	/**
+	 * 企業一覧画面(ログイン後の初期表示画面)
+	 * @return
+	 */
+	@RequestMapping(value="top")
+	public String displayCompanyList(){
+		return companyList;
+	}
+	
+	// 企業ユーザー追加
+	
+	// ユーザー削除
 }
