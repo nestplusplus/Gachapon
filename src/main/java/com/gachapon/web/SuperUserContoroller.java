@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gachapon.domain.Account;
 import com.gachapon.page.SuperUserPage;
 import com.gachapon.service.SuperUserService;
+import com.gachapon.web.form.SuperUserLoginForm;
 
 @Controller 							// コントローラーであることを示す
 @RequestMapping(value="/superUser")  	// アドレスの指定。ここで指定するのはクラス自体のアドレス。他のメソッド参考にしてください。
@@ -28,12 +29,12 @@ public class SuperUserContoroller {
 	private String url;
 	
 	// 遷移先指定用 単純遷移の時はこっち
-	private final static String index 		= "SuperUser/index";
-	private final static String companyList = "SuperUser/top";
+	private final static String INDEX 		= "SuperUser/index";
+	private final static String COMPANY_LIST = "SuperUser/top";
 	
 	// リダイレクト用 他の処理を通す時はこっち
-	private final static String top		= "redirect:/superUser/top";
-	private final static String logout 		= "redirect:/superUser";
+	private final static String TOP		= "redirect:/superUser/top";
+	private final static String LOGOUT 		= "redirect:/superUser";
 	
 	// エラーメッセージ用
 	private final static String errorMsg 	= "errorMsg";
@@ -53,7 +54,7 @@ public class SuperUserContoroller {
 	 */
 	@RequestMapping // valueの指定がないので、クラス自体のアドレスだけの際にはこのメソッドが呼び出される[http://localhost:8080/superUser]
 	public String displaySuperUserIndex(){ // 戻り値はhtmlのファイル名を返すのでString
-		return index; // 呼び出すhtml(jsp)を指定。この場合[SuperUserフォルダのindex.jsp]を呼び出している。
+		return INDEX; // 呼び出すhtml(jsp)を指定。この場合[SuperUserフォルダのindex.jsp]を呼び出している。
 	}
 	
 	/**
@@ -75,20 +76,23 @@ public class SuperUserContoroller {
 			HttpSession session, 
 			SessionStatus sessionStatus,
 			RedirectAttributes redirectAttributes){
+		
 		// サービスクラスからアカウント情報を取得
 		Optional<Account> account = service.findSuperUser(form);
+		
 		// 取得できなかったときの処理
 		if(!account.isPresent()){
 			ObjectError error = new ObjectError(errorMsg,"ユーザー認証に失敗しました"); // エラー情報の格納
 			result.addError(error);
 			url = displaySuperUserIndex(); // 遷移先指定
 		}
+		
 		// 正常時の処理
 		account.ifPresent(superUser ->{
 			SuperUserPage superUserPage = new SuperUserPage();
 			BeanUtils.copyProperties(superUser, superUserPage); // 取得した値を表示用クラスにコピー
 			model.addAttribute("superUserPage", superUserPage); // 取得できたアカウント情報を次の画面に渡すための処理
-			url = top;
+			url = TOP;
 		});
 		return url;
 	}
@@ -101,7 +105,7 @@ public class SuperUserContoroller {
 	@RequestMapping(value="logout")
 	public String logout(SessionStatus sessionStatus) {
 		sessionStatus.setComplete();
-		return logout;
+		return LOGOUT;
 	}
 	
 	// 企業一覧
@@ -111,7 +115,7 @@ public class SuperUserContoroller {
 	 */
 	@RequestMapping(value="top")
 	public String displayCompanyList(){
-		return companyList;
+		return COMPANY_LIST;
 	}
 	
 	// 企業ユーザー追加

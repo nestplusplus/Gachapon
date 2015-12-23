@@ -9,6 +9,7 @@ html, body {
 
 header {
 	height: 36px;
+	color: #555555;
 }
 
 #menu {
@@ -32,6 +33,7 @@ header {
 	background-color: #ffeccc;
 	margin-left: -20px;
 	cursor: pointer;
+	color: #000000;
 }
 
 #menu li a{

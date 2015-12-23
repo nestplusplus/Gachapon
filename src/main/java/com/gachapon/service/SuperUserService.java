@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.gachapon.domain.Account;
 import com.gachapon.repository.SuperUserRepository;
-import com.gachapon.web.SuperUserLoginForm;
+import com.gachapon.web.form.SuperUserLoginForm;
 
 @Service
 public class SuperUserService {

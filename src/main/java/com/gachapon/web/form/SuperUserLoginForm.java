@@ -1,4 +1,4 @@
-package com.gachapon.web;
+package com.gachapon.web.form;
 
 import javax.validation.constraints.Size;
 
