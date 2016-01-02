@@ -11,6 +11,8 @@
 <script src="/js/jquery-1.8.3.js"></script>
 <script src="/js/jquery-ui-1.9.2.custom.js"></script>
 <script src="/js/jquery.cookie.js"></script>
+<script src="/js/jquery.leanModal.min.js"></script>
+
 <script>
 	$(function() {
 		$('#openCompany').hover(function(){
@@ -27,7 +29,7 @@
 			$(this).text('ログアウト');
 		},function(){
 			$(this).text('Logout')
-		})
+		});
 		
 		$('#openCompany').click(function() {
 			$('#company').slideDown('slow');
@@ -42,11 +44,50 @@
 			if(result === true){
 				document.location.href = "/superUser/logout";
 			}
-		})
+		});
+		$( 'a[rel*=leanModal]').leanModal({
+		    top: 50,
+		    overlay : 0.7,
+		    closeButton: ".modal_close"
+		  });
 	});
+	
 </script>
+<style>
+#lean_overlay  {
+	position: fixed; z-index:100;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+	background: #000;
+	display: none;
+}
+
+#modalComEdit {
+	background-color: #FFFFFF;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+	display: none;
+	padding: 30px;
+	width: 300px;
+	height: 300px;
+}
+
+.modal_close {
+	position: absolute;
+	border: 1px solid #000000;
+	border-radius:5px;
+	top: 12px;
+	right: 12px;
+	display: block;
+	/* widthとheightは閉じるボタンの画像の幅を指定 */
+	z-index: 2;
+}
+</style>
+
 <title>管理画面</title>
 </head>
+<!-- #################　ここまでヘッダー　################# -->
 <body>
 	<header>
 		<ul id="menu">
@@ -58,6 +99,30 @@
 	</header>
 	<!-- #################　企業一覧　################# -->
 	<div id="company" class="contents">
+		<a rel="leanModal" href="#modalComEdit">Edit</a>
+		<div id="modalComEdit">
+			<div class="modal_close"> 閉じる </div>
+			<h4>企業登録</h4>
+			<table>
+				<form:form action="/superUser/login"
+					modelAttribute="superUserLoginForm">
+					<tr>
+						<td>メールアドレス</td>
+						<td><form:input path="mailaddress" placeholder="E-mail..."
+								required="required" /></td>
+					</tr>
+					<tr>
+						<td>パスワード</td>
+						<td><form:password path="password" placeholder="Password..."
+								required="required" /></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="submit" value="ログイン"></td>
+					</tr>
+				</form:form>
+			</table>
+		</div>
+
 		<h3 class="title">企業一覧</h3>
 		<div class="companyItem">
 			<p>画像</p>
