@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gachapon.domain.Account;
 import com.gachapon.page.SuperUserPage;
 import com.gachapon.service.SuperUserService;
+import com.gachapon.web.form.CompanyRegisterForm;
 import com.gachapon.web.form.SuperUserLoginForm;
 
 @Controller 							// コントローラーであることを示す
@@ -45,6 +47,11 @@ public class SuperUserContoroller {
 	@ModelAttribute						// 利用する入力フォームの初期化
 	private SuperUserLoginForm loginForm(){
 		return new SuperUserLoginForm();
+	}
+	
+	@ModelAttribute
+	private CompanyRegisterForm companyRegisterForm() {
+		return new CompanyRegisterForm();
 	}
 	
 	/**
@@ -115,10 +122,22 @@ public class SuperUserContoroller {
 	 */
 	@RequestMapping(value="top")
 	public String displayCompanyList(){
+		
 		return COMPANY_LIST;
 	}
 	
 	// 企業ユーザー追加
+	@RequestMapping(value="registerCompany", method = { RequestMethod.POST })
+	public String registerCompany(
+			CompanyRegisterForm form,
+			BindingResult result,
+			Model model, 
+			HttpSession session, 
+			SessionStatus sessionStatus,
+			RedirectAttributes redirectAttributes) {
+		service.registerCompany(form);
+		return TOP;
+	}
 	
 	// ユーザー削除
 }

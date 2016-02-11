@@ -100,28 +100,38 @@
 	<!-- #################　企業一覧　################# -->
 	<div id="company" class="contents">
 		<a rel="leanModal" href="#modalComEdit">Edit</a>
+		<!-- #################　企業登録モーダル　################# -->
 		<div id="modalComEdit">
 			<div class="modal_close"> 閉じる </div>
 			<h4>企業登録</h4>
 			<table>
-				<form:form action="/superUser/login"
-					modelAttribute="superUserLoginForm">
+				<form:form action="/superUser/registerCompany"
+					modelAttribute="companyRegisterForm">
 					<tr>
-						<td>メールアドレス</td>
-						<td><form:input path="mailaddress" placeholder="E-mail..."
+						<td>企業名</td>
+						<td><form:input path="companyName" placeholder="企業名..."
 								required="required" /></td>
 					</tr>
 					<tr>
-						<td>パスワード</td>
-						<td><form:password path="password" placeholder="Password..."
+						<td>所在地</td>
+						<td><form:input path="location" placeholder="所在地..."
 								required="required" /></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" value="ログイン"></td>
+						<td>画像</td>
+						<td><form:input path="imagePath" placeholder="画像パス..." /></td>
+					</tr>
+					<tr>
+						<td>紹介文</td>
+						<td><form:input path="intro" placeholder="紹介文" /></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="submit" value="登録"></td>
 					</tr>
 				</form:form>
 			</table>
 		</div>
+		<!-- #################　ここまでモーダル　################# -->
 
 		<h3 class="title">企業一覧</h3>
 		<div class="companyItem">
