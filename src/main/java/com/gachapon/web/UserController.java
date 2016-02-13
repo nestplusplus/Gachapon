@@ -20,24 +20,46 @@ public class UserController {
 		return "index"; // index.jspからUser/top遷移するか、そもそもUser/topに遷移する処理にするかは任せます
 	}
 
-	// TODO:ログイン画面遷移
+	// TODO:topログイン画面遷移
+	@RequestMapping(value = "top")
+	public String top(){
+		return "User/top";
+	}
+	// TODO:Userログイン画面遷移
 	@RequestMapping(value = "login")
 	public String login(){
 		return "User/login";
 	}
-	// TODO:新規登録画面遷移
-
+	// TODO:User企業詳細画面遷移
+	@RequestMapping(value = "companyDetail")
+	public String companyDetail(){
+		return "User/companyDetail";
+	}
+	// TODO:register新規登録画面遷移
+	@RequestMapping(value = "register")
+	public String register(){
+		return "User/register";
+	}
+	// TODO:gachaponガチャ画面遷移
+	@RequestMapping(value = "gachapon")
+	public String gachapon(){
+		return "User/gachapon";
+	}
+	// TODO:mypageマイページ遷移処理
+	@RequestMapping(value = "mypage")
+	public String mypage(){
+		return "User/mypage";
+	}
+	// TODO:edit編集画面遷移
+	@RequestMapping(value = "edit")
+	public String edit(){
+		return "User/edit";
+	}
 	// TODO:新規登録処理
 
 	// TODO:ログイン処理
 
-	// TODO:マイページ遷移処理
-
-	// TODO:編集画面遷移
-
 	// TODO:編集処理
 
-	// TODO:企業詳細画面遷移
 
-	// TODO:ガチャ
 }
